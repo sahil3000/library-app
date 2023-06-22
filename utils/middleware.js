@@ -7,7 +7,7 @@ const middleWare = {
         try {
             const token = req.headers.authorization;
             if (!token) {
-                return res.json({
+                return res.status(403).json({
                     error: true,
                     body: {},
                     msg: 'please provide token'

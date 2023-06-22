@@ -126,7 +126,7 @@ const bookController = {
             })
 
             return res.status(201).json({
-                error: true,
+                error: false,
                 body: response,
                 msg: 'book successfully added to user collection'
             });
