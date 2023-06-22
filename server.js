@@ -1,7 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 const connectDatabase = require('./model/connection');
-const { userRoutes, bookRoutes } = require('./routes');
+const { userRoutes, bookRoutes, genreRoutes, authorRoutes } = require('./routes');
 const app = express();
 const port = process.env.PORT;
 
@@ -12,6 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth',userRoutes)
 app.use('/api/book',bookRoutes)
+app.use('/api/genre',genreRoutes)
+app.use('/api/author',authorRoutes )
 
 app.get('', (req, res) => {
     res.send("welcome to app")

@@ -34,10 +34,18 @@ const addBookReviewSchema = Joi.object({
     rating: Joi.number().integer().required().min(0).max(5),
 });
 
+const addAuthorSchema = Joi.object({
+    name: Joi.string().required().min(2),
+    address: Joi.string().required().min(2),
+});
+
+const addGenreSchema = Joi.object({
+    name: Joi.string().required().min(2)
+});
+
 const validation = ({schema, body}) => {
-    console.log("body",body)
     const { error } = schema.validate(body);
     return error;
 }
 
-module.exports = { signupSchema, loginSchema, validation, addBookToCollectionSchema, addBookSchema, removeBookToCollectionSchema, addBookReviewSchema };
+module.exports = { signupSchema, loginSchema, validation, addBookToCollectionSchema, addBookSchema, removeBookToCollectionSchema, addBookReviewSchema, addAuthorSchema, addGenreSchema };

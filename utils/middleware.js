@@ -22,7 +22,7 @@ const middleWare = {
                     msg: 'invalid token'
                 });
             }
-            console.log("token", isValid)
+
             req.userId = isValid.id
             next();
         } catch (err) {
@@ -38,7 +38,6 @@ const middleWare = {
         return async (req, res, next) => {
             let body = req.body;
             if (fromParams) {
-                console.log("req.params",req.params)
                 body = {...body, ...req.params};
             }
             if (isUserIdRequired) {

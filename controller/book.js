@@ -38,26 +38,64 @@ const bookController = {
 
     getAllBooks: async function(req, res) {
         const query = req.query;
-        
+        console.log("queryquery",query)
+
+        let execQuery = [
+            {
+                $lookup: {
+                    from: "authors",
+                    localField: 'authorId',
+                    foreignField: '_id',
+                    as: 'authorDetails'
+                }
+            },
+            {
+                $lookup: {
+                    from: "genres",
+                    localField: 'genreId',
+                    foreignField: '_id',
+                    as: 'genreDetails'
+                },
+            },
+            {
+                $lookup: {
+                    from: "reviews",
+                    localField: '_id',
+                    foreignField: 'bookId',
+                    as: 'bookReview'
+                },
+            }
+        ]
+
+        // search filter
+        if (query.field === 'title') {
+            execQuery = [ ...execQuery, {
+                $match: {
+                    [query.field]: {
+                            '$regex': `^${query.search}`
+                    }
+                }
+            }]
+        } else if (query.field === 'genre') {
+            execQuery = [ ...execQuery, {
+                $match: {
+                    "genreDetails.name": {
+                            '$regex': `^${query.search}`
+                    }
+                }
+            }]
+        } else if (query.field === 'author') {
+            execQuery = [ ...execQuery, {
+                $match: {
+                    "authorDetails.name": {
+                            '$regex': `^${query.search}`
+                    }
+                }
+            }]
+        }
+
         try {
-            const books = await Book.aggregate([
-                {
-                    $lookup: {
-                        from: "authors",
-                        localField: 'authorId',
-                        foreignField: '_id',
-                        as: 'authorDetails'
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "genres",
-                        localField: 'genreId',
-                        foreignField: '_id',
-                        as: 'genreDetails'
-                    }
-                },
-            ]);
+            const books = await Book.aggregate(execQuery);
 
             return res.status(200).json({
                 error: false,
