@@ -2,15 +2,15 @@ const request = require('supertest');
 const app = require('../server');
 const fs = require('fs');
 const { rootFolder } = require('../rootFile');
-const authorizationToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTMzMzdkNzU4NmU1YzZmODRhYzNkYyIsImlhdCI6MTY4NzM3MDc1MH0.FZMb4v4_yHaiMNsNKQ_IIjMT55Tmp9k5SCgbcYPxc8Q";
+const authorizationToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTQ5OTkzYzhkOTlmYzNkMTUyMzA0OSIsImlhdCI6MTY4NzQ2MDI2MH0.eB1tRyrhCqYYkOWpKeLHEPVR3ne-Tg2_EmK0BkkgKIU";
 const removingBookCollectionId = "649474710bfb9570c0cc2b2c";
 
 describe('post /api/book/add', () => {
     it("without token error", async () => {
         const body = {
             "title": "test book",
-            "authorId": "64933cf63668d7906c0e63ae",
-            "genreId": "64933d703668d7906c0e63b1",
+            "authorId": "649499c1c8d99fc3d152304e",
+            "genreId": "649499b4c8d99fc3d152304c",
             "isbn": "kkbmkg-vnjvfd",
             "qty": "2"
         }
@@ -28,8 +28,8 @@ describe('post /api/book/add', () => {
 
     it("check input validation", async () => {
         const body = {
-            "authorId": "64933cf63668d7906c0e63ae",
-            "genreId": "64933d703668d7906c0e63b1",
+            "authorId": "649499c1c8d99fc3d152304e",
+            "genreId": "649499b4c8d99fc3d152304c",
             "isbn": "kkbmkg-vnjvfd",
             "qty": "2"
         }
@@ -47,9 +47,9 @@ describe('post /api/book/add', () => {
 
     it('should post a book', async () => {
         const body = {
-            "title": "My life my journey",
-            "authorId": "64933cf63668d7906c0e63ae",
-            "genreId": "64933d703668d7906c0e63b1",
+            "title": "test book",
+            "authorId": "649499c1c8d99fc3d152304e",
+            "genreId": "649499b4c8d99fc3d152304c",
             "isbn": "kkbmkg-vnjvfd",
             "qty": "2"
         }
@@ -80,9 +80,9 @@ describe('post /api/book/add', () => {
 
     it('check image validation', async () => {
         const body = {
-            "title": "My life my journey",
-            "authorId": "64933cf63668d7906c0e63ae",
-            "genreId": "64933d703668d7906c0e63b1",
+            "title": "test book",
+            "authorId": "649499c1c8d99fc3d152304e",
+            "genreId": "649499b4c8d99fc3d152304c",
             "isbn": "kkbmkg-vnjvfd",
             "qty": "2"
         }
@@ -107,7 +107,7 @@ describe('post /api/book/add', () => {
 describe('post /api/book/addBookToCollection', () => {
     it("without token error", async () => {
         const body = {
-            "bookId": "649343c88f375f175df04d17"
+            "bookId": "64949b09c8d99fc3d1523060"
         }
 
         const response = await request(app)
@@ -138,7 +138,7 @@ describe('post /api/book/addBookToCollection', () => {
 
     it('should book add to user collection', async () => {
         const body = {
-            "bookId": "649343c88f375f175df04d17"
+            "bookId": "64949b09c8d99fc3d1523060"
         }
         const response = await request(app)
             .post('/api/book/addBookToCollection')
@@ -158,7 +158,7 @@ describe('post /api/book/addBookToCollection', () => {
 
 describe('delete /api/book/removeBookToCollection/:id', () => {
     it("without token error", async () => {
-        const id = "649351f224858a1804309794";
+        const id = "64949c53c8d99fc3d1523088";
         const response = await request(app)
             .delete(`/api/book/removeBookToCollection/${id}`)
             .send()
@@ -198,7 +198,7 @@ describe('delete /api/book/removeBookToCollection/:id', () => {
 describe('post book review /api/book/addBookReview', () => {
     it("without token error", async () => {
         const body = {
-            "bookId": "649342458147668cb7baf4d0",
+            "bookId": "64949b2fc8d99fc3d1523065",
             "rating": "3"
         }
         const response = await request(app)
@@ -214,7 +214,7 @@ describe('post book review /api/book/addBookReview', () => {
 
     it("add book review", async () => {
         const body = {
-            "bookId": "649342458147668cb7baf4d0",
+            "bookId": "64949b2fc8d99fc3d1523065",
             "rating": "3"
         }
 
@@ -233,7 +233,7 @@ describe('post book review /api/book/addBookReview', () => {
 
     it("check input validation", async () => {
         const body = {
-            "bookId": "649342458147668cb7baf4d0",
+            "bookId": "64949b2fc8d99fc3d1523065",
         }
 
         const response = await request(app)
@@ -304,7 +304,7 @@ describe('get books /api/book', () => {
     });
 
     it("get books by author name", async () => {
-        const search = "john"
+        const search = "test"
         const field = "author"
         const response = await request(app)
             .get(`/api/book?search=${search}&field=${field}`)
