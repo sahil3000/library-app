@@ -3,6 +3,7 @@ const bookModal = require("../model/book");
 const genreModal = require("../model/genre");
 const reviewModal = require("../model/review");
 const userBookCollectionModal = require("../model/userBookCollection");
+const { rootFolder } = require("../rootFile");
 
 const Book = bookModal;
 const Author = authorModal;
@@ -12,31 +13,54 @@ const Review = reviewModal;
 
 const bookController = {
     addBook: async function (req, res) {
-        const {authorId, genreId } = req.body;
-        
-        try {
-            // check author id and genre id is valid or not. If not valid, it throws error on catch block
-            await Author.findOne({_id: authorId});
-            await Genre.findOne({_id: genreId});
-            
+        const { authorId, genreId } = req.body;
 
-            // insert book detail
-            const result = await Book.create(req.body)
-            return res.status(201).json({
-                error: false,
-                body: result,
-                msg: "book inserted successfully"
-            });
-        } catch (err) {
-            return res.status(500).json({
+        if (req.files && req.files.image) {
+            const uploadedImage = req.files.image;
+            const uploadPath = rootFolder + "/images/"+ Date.now() + uploadedImage.name;
+            uploadedImage.mv(uploadPath,  async (err) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: true,
+                        body: {},
+                        msg: 'fail to uploaded image!!'
+                    });        
+                }
+                try {
+                    // check author id and genre id is valid or not. If not valid, it throws error on catch block
+                    await Author.findOne({ _id: authorId });
+                    await Genre.findOne({ _id: genreId });
+
+
+                    // insert book detail
+                    const image = "/images/" + Date.now() +uploadedImage.name;
+                    const result = await Book.create({
+                        ...req.body,
+                        image
+                    })
+                    return res.status(201).json({
+                        error: false,
+                        body: result,
+                        msg: "book inserted successfully"
+                    });
+                } catch (err) {
+                    return res.status(500).json({
+                        error: true,
+                        body: {},
+                        msg: err.message
+                    });
+                }
+            })
+        } else {
+            return res.status(400).json({
                 error: true,
                 body: {},
-                msg: err.message
+                msg: 'please provide image'
             });
         }
     },
 
-    getAllBooks: async function(req, res) {
+    getAllBooks: async function (req, res) {
         const query = req.query;
 
         let execQuery = [
@@ -68,29 +92,29 @@ const bookController = {
 
         // search filter
         if (query.field === 'title') {
-            const regex = new RegExp(query.search,"i");
-            execQuery = [ ...execQuery, {
+            const regex = new RegExp(query.search, "i");
+            execQuery = [...execQuery, {
                 $match: {
                     [query.field]: {
-                            '$regex': regex
+                        '$regex': regex
                     }
                 }
             }]
         } else if (query.field === 'genre') {
-            const regex = new RegExp(query.search,"i");
-            execQuery = [ ...execQuery, {
+            const regex = new RegExp(query.search, "i");
+            execQuery = [...execQuery, {
                 $match: {
                     "genreDetails.name": {
-                            '$regex': regex
+                        '$regex': regex
                     }
                 }
             }]
         } else if (query.field === 'author') {
-            const regex = new RegExp(query.search,"i");
-            execQuery = [ ...execQuery, {
+            const regex = new RegExp(query.search, "i");
+            execQuery = [...execQuery, {
                 $match: {
                     "authorDetails.name": {
-                            '$regex': regex
+                        '$regex': regex
                     }
                 }
             }]
@@ -115,9 +139,9 @@ const bookController = {
 
     addBookToUserCollection: async function (req, res) {
         try {
-            const {bookId} = req.body;
+            const { bookId } = req.body;
             // check book id is valid or not
-            await Book.findOne({_id: bookId});
+            await Book.findOne({ _id: bookId });
 
 
             const response = await UserBookCollection.create({
@@ -141,9 +165,9 @@ const bookController = {
 
     removeBookToUserCollection: async function (req, res) {
         try {
-            const {id} = req.params;
-            
-            const deleteRecord = await UserBookCollection.findOneAndDelete({_id: id});
+            const { id } = req.params;
+
+            const deleteRecord = await UserBookCollection.findOneAndDelete({ _id: id });
 
             if (deleteRecord) {
                 return res.json({
@@ -151,13 +175,13 @@ const bookController = {
                     msg: 'book successfully remove from user collection',
                     body: {}
                 });
-            } 
+            }
             return res.json({
                 error: false,
                 msg: 'invalid id. Fail to remove from user collection',
                 body: {}
             });
-            
+
         } catch (err) {
             return res.status(500).json({
                 error: true,
@@ -170,7 +194,7 @@ const bookController = {
     addBookReview: async function (req, res) {
         try {
             let body = req.body;
-            
+
             if (req.userId) {
                 body = { ...body, userId: req.userId };
             }

@@ -5,6 +5,10 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    image: {
+        type: String,
+        required: true
+    },
     authorId : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Author'
@@ -20,7 +24,15 @@ const bookSchema = new mongoose.Schema({
     qty: {
         type: Number,
         required: true
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 const bookModal = mongoose.model('Book', bookSchema);
 module.exports = bookModal;

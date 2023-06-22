@@ -8,7 +8,15 @@ const authorSchema = new mongoose.Schema({
     address: {
         type: String,
         required: true
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 const authorModal = mongoose.model('Author', authorSchema);
 module.exports = authorModal;

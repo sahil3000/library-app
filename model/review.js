@@ -13,6 +13,14 @@ const reviewSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 const reviewModal = mongoose.model('Review', reviewSchema);
 module.exports = reviewModal;
