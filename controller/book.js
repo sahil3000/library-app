@@ -38,7 +38,6 @@ const bookController = {
 
     getAllBooks: async function(req, res) {
         const query = req.query;
-        console.log("queryquery",query)
 
         let execQuery = [
             {
@@ -69,26 +68,29 @@ const bookController = {
 
         // search filter
         if (query.field === 'title') {
+            const regex = new RegExp(query.search,"i");
             execQuery = [ ...execQuery, {
                 $match: {
                     [query.field]: {
-                            '$regex': `^${query.search}`
+                            '$regex': regex
                     }
                 }
             }]
         } else if (query.field === 'genre') {
+            const regex = new RegExp(query.search,"i");
             execQuery = [ ...execQuery, {
                 $match: {
                     "genreDetails.name": {
-                            '$regex': `^${query.search}`
+                            '$regex': regex
                     }
                 }
             }]
         } else if (query.field === 'author') {
+            const regex = new RegExp(query.search,"i");
             execQuery = [ ...execQuery, {
                 $match: {
                     "authorDetails.name": {
-                            '$regex': `^${query.search}`
+                            '$regex': regex
                     }
                 }
             }]
