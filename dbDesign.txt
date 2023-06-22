@@ -1,0 +1,39 @@
+==> User
+- _id (string)
+- name (string)
+- email (string)
+- password (string)
+- createAt (string)
+- updateAt (string)
+
+
+==> Book
+- bookId (string)
+- title (string)
+- authorId (foreign key)
+- genreId (foreign key)
+- isbn (string)
+- qty (integer)
+- createAt (string)
+- updateAt (string) 
+
+
+==> Author
+- authorId (string)
+- name (string)
+- address (string)
+
+==> Review
+- _id (string),
+- bookId (foreign key),
+- rating (Integer),
+- userid (foreign key)
+
+
+==> Genre
+- genreId (Integer)
+- name (string)
+
+==> UserBookCollection
+- userId (foreign key)
+- bookId (foreign key)

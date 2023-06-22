@@ -1,12 +1,14 @@
 const authorModal = require("../model/author");
 const bookModal = require("../model/book");
 const genreModal = require("../model/genre");
+const reviewModal = require("../model/review");
 const userBookCollectionModal = require("../model/userBookCollection");
 
 const Book = bookModal;
 const Author = authorModal;
 const Genre = genreModal;
 const UserBookCollection = userBookCollectionModal;
+const Review = reviewModal;
 
 const bookController = {
     addBook: async function (req, res) {
@@ -35,6 +37,8 @@ const bookController = {
     },
 
     getAllBooks: async function(req, res) {
+        const query = req.query;
+        
         try {
             const books = await Book.aggregate([
                 {
@@ -52,7 +56,7 @@ const bookController = {
                         foreignField: '_id',
                         as: 'genreDetails'
                     }
-                }
+                },
             ]);
 
             return res.status(200).json({
@@ -121,6 +125,29 @@ const bookController = {
                 msg: err.message
             });
         }
-    }
+    },
+
+    addBookReview: async function (req, res) {
+        try {
+            let body = req.body;
+            
+            if (req.userId) {
+                body = { ...body, userId: req.userId };
+            }
+
+            const response = await Review.create(body)
+            return res.status(201).json({
+                error: false,
+                body: response,
+                msg: 'book review successfully added'
+            });
+        } catch (err) {
+            return res.status(500).json({
+                error: true,
+                body: {},
+                msg: err.message
+            });
+        }
+    },
 }
 module.exports = bookController;

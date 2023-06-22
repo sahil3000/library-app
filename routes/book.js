@@ -1,7 +1,7 @@
 const express = require('express');
 const bookController = require('../controller/book');
 const middleWare = require('../utils/middleware');
-const { addBookToCollectionSchema, addBookSchema, removeBookToCollectionSchema } = require('../utils/validation');
+const { addBookToCollectionSchema, addBookSchema, removeBookToCollectionSchema, addBookReviewSchema } = require('../utils/validation');
 const router = express.Router();
 
 router.post(
@@ -22,6 +22,13 @@ router.post(
     middleWare.verifyToken,
     middleWare.inputValidation(addBookToCollectionSchema, true),
     bookController.addBookToUserCollection
+);
+
+router.post(
+    '/addBookReview',
+    middleWare.verifyToken,
+    middleWare.inputValidation(addBookReviewSchema, true),
+    bookController.addBookReview
 );
 
 router.delete(

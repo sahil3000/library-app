@@ -1,4 +1,5 @@
 const Joi = require('joi');
+
 const signupSchema = Joi.object({ 
     email: Joi.string().required(),
     name: Joi.string().required().min(2), 
@@ -27,10 +28,16 @@ const removeBookToCollectionSchema = Joi.object({
     id: Joi.string().required()
 });
 
+const addBookReviewSchema = Joi.object({ 
+    userId: Joi.string().required(),
+    bookId: Joi.string().required(),
+    rating: Joi.number().integer().required().min(0).max(5),
+});
+
 const validation = ({schema, body}) => {
     console.log("body",body)
     const { error } = schema.validate(body);
     return error;
 }
 
-module.exports = { signupSchema, loginSchema, validation, addBookToCollectionSchema, addBookSchema, removeBookToCollectionSchema };
+module.exports = { signupSchema, loginSchema, validation, addBookToCollectionSchema, addBookSchema, removeBookToCollectionSchema, addBookReviewSchema };
